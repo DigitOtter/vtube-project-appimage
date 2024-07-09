@@ -1,0 +1,3 @@
+[submodule "deps/vtube-project"]
+	path = deps/vtube-project
+	url = https://github.com/DigitOtter/vtube-project.git
