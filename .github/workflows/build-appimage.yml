@@ -13,100 +13,100 @@ jobs:
           - nightly
     steps:
       - uses: actions/checkout@master
-      # - name: Install vtube-project build dependencies
-      #   run: |
-      #     apt-get update
-      #     # Get newest cmake
-      #     apt-get install ca-certificates gpg wget
-      #     test -f /usr/share/doc/kitware-archive-keyring/copyright || wget --retry-on-host-error -t 50 -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
-      #       gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
-      #     echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
-      #     apt-get update
-      #     # AppImage and compilation tools
-      #     apt-get install -y \
-      #       kitware-archive-keyring cmake ninja-build clang python3 python3-venv libvulkan-dev
-      #     # Godot deps
-      #     apt-get install -y \
-      #       build-essential \
-      #       scons \
-      #       pkg-config \
-      #       libx11-dev \
-      #       libxcursor-dev \
-      #       libxinerama-dev \
-      #       libgl1-mesa-dev \
-      #       libglu1-mesa-dev \
-      #       libasound2-dev \
-      #       libpulse-dev \
-      #       libudev-dev \
-      #       libxi-dev \
-      #       libxrandr-dev
-      #     # MediaPipe
-      #     apt-get install -y \
-      #       python-is-python3 \
-      #       libopencv-core-dev \
-      #       libopencv-highgui-dev \
-      #       libopencv-calib3d-dev \
-      #       libopencv-features2d-dev \
-      #       libopencv-imgproc-dev \
-      #       libopencv-video-dev
-      # - name: Install latest nightly
-      #   uses: actions-rs/toolchain@v1
+      - name: Install vtube-project build dependencies
+        run: |
+          apt-get update
+          # Get newest cmake
+          apt-get install ca-certificates gpg wget
+          test -f /usr/share/doc/kitware-archive-keyring/copyright || wget --retry-on-host-error -t 50 -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
+            gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
+          apt-get update
+          # AppImage and compilation tools
+          apt-get install -y \
+            kitware-archive-keyring cmake ninja-build clang python3 python3-venv libvulkan-dev
+          # Godot deps
+          apt-get install -y \
+            build-essential \
+            scons \
+            pkg-config \
+            libx11-dev \
+            libxcursor-dev \
+            libxinerama-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libasound2-dev \
+            libpulse-dev \
+            libudev-dev \
+            libxi-dev \
+            libxrandr-dev
+          # MediaPipe
+          apt-get install -y \
+            python-is-python3 \
+            libopencv-core-dev \
+            libopencv-highgui-dev \
+            libopencv-calib3d-dev \
+            libopencv-features2d-dev \
+            libopencv-imgproc-dev \
+            libopencv-video-dev
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            override: true
+      # - name: Run cargo check
+      #   uses: actions-rs/cargo@v1
       #   with:
-      #       toolchain: nightly
-      #       override: true
-      # # - name: Run cargo check
-      # #   uses: actions-rs/cargo@v1
-      # #   with:
-      # #     command: check
+      #     command: check
 
-      # - name: Get AppImage tools
-      #   run: |
-      #     wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-x86_64.AppImage
-      #     mv linuxdeploy-x86_64.AppImage linuxdeploy
-      #     chmod u+x linuxdeploy
-      #     wget https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage
-      #     mv appimagetool-x86_64.AppImage appimagetool
-      #     chmod u+x appimagetool
+      - name: Get AppImage tools
+        run: |
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-x86_64.AppImage
+          mv linuxdeploy-x86_64.AppImage linuxdeploy
+          chmod u+x linuxdeploy
+          wget https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage
+          mv appimagetool-x86_64.AppImage appimagetool
+          chmod u+x appimagetool
 
-      # - name: Build vtube_project dependencies
-      #   run: |
-      #     git submodule update --init --recursive --depth=1
-      #     cd deps/vtube-project
-      #     ./CI/build_dependencies.sh -DTSV_ABSOLUTE_PATH=OFF -DCMAKE_CXX_STANDARD=20
+      - name: Build vtube_project dependencies
+        run: |
+          git submodule update --init --recursive --depth=1
+          cd deps/vtube-project
+          ./CI/build_dependencies.sh -DTSV_ABSOLUTE_PATH=OFF -DCMAKE_CXX_STANDARD=20
 
-      #     # We can't build the actual executable as that requires a display server
+          # We can't build the actual executable as that requires a display server
 
-      #     # Copy all libs to bin
-      #     mkdir -p bin
-      #     find -L addons/ -iname "*.so" -exec cp {} ./bin/ \;
-      #     cp third_party/install/texture_share_vk/lib/*.so ./bin/
+          # Copy all libs to bin
+          mkdir -p bin
+          find -L addons/ -iname "*.so" -exec cp {} ./bin/ \;
+          cp third_party/install/texture_share_vk/lib/*.so ./bin/
 
-      # - name: Build AppImage
-      #   run: |
-      #     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PWD/deps/vtube-project/third_party/install/texture_share_vk/lib"
+      - name: Build AppImage
+        run: |
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PWD/deps/vtube-project/third_party/install/texture_share_vk/lib"
 
-      #     # Install vtube_project.pck
-      #     mkdir -p AppDir/usr/share/vtube_project
-      #     cp vtube_project.pck AppDir/usr/share/vtube_project/
+          # Install vtube_project.pck
+          mkdir -p AppDir/usr/share/vtube_project
+          cp vtube_project.pck AppDir/usr/share/vtube_project/
 
-      #     # Install texture-share-vk and godot base
-      #     ./linuxdeploy --appimage-extract-and-run --appdir AppDir \
-      #       -e deps/vtube-project/third_party/install/texture_share_vk/bin/texture-share-vk-server \
-      #       -e deps/vtube-project/third_party/godot/bin/godot.linuxbsd.template_release.x86_64
+          # Install texture-share-vk and godot base
+          ./linuxdeploy --appimage-extract-and-run --appdir AppDir \
+            -e deps/vtube-project/third_party/install/texture_share_vk/bin/texture-share-vk-server \
+            -e deps/vtube-project/third_party/godot/bin/godot.linuxbsd.template_release.x86_64
 
-      #     # Install vtube_project libraries
-      #     ls deps/vtube-project/bin/*.so | xargs -I {} ./linuxdeploy --appimage-extract-and-run --appdir AppDir -l "{}"
+          # Install vtube_project libraries
+          ls deps/vtube-project/bin/*.so | xargs -I {} ./linuxdeploy --appimage-extract-and-run --appdir AppDir -l "{}"
 
-      #     # Install start script, .desktop and icon
-      #     cp vtube_project.sh AppDir/usr/bin/
-      #     ./linuxdeploy --appimage-extract-and-run --appdir AppDir -e /usr/bin/bash -d vtube_project.desktop -i vtube_project.png
+          # Install start script, .desktop and icon
+          cp vtube_project.sh AppDir/usr/bin/
+          ./linuxdeploy --appimage-extract-and-run --appdir AppDir -e /usr/bin/bash -d vtube_project.desktop -i vtube_project.png
 
-      #     # Copy godot base as linuxdeploy uses patchelf to change rpath, which breaks the executable
-      #     # ( might be related to https://github.com/NixOS/patchelf/issues/528 )
-      #     cp deps/vtube-project/third_party/godot/bin/godot.linuxbsd.template_release.x86_64 AppDir/usr/bin/
+          # Copy godot base as linuxdeploy uses patchelf to change rpath, which breaks the executable
+          # ( might be related to https://github.com/NixOS/patchelf/issues/528 )
+          cp deps/vtube-project/third_party/godot/bin/godot.linuxbsd.template_release.x86_64 AppDir/usr/bin/
 
-      #     # Use appimage instead of linuxdeploy as it won't break the executable
-      #     ./appimagetool --appimage-extract-and-run AppDir
+          # Use appimage instead of linuxdeploy as it won't break the executable
+          ./appimagetool --appimage-extract-and-run AppDir
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -116,32 +116,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             Vtube_Project-x86_64.AppImage
-
-      # - name: Create AppImage Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: v2 ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       AppImage
-      #     draft: true
-      #     prerelease: false
-      # - name: Upload AppImage
-      #   uses: d1ceward/draft-assets-release-action@v2
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     args: Vtube_Project-x86_64.AppImage application/zip
-      #     # upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     # asset_path: ./Vtube_Project-x86_64.AppImage
-      #     # asset_name: Vtube_Project-x86_64.AppImage
-      #     # asset_content_type: application/zip
-      # - name: Publish release
-      #   uses: eregon/publish-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     id: ${{ steps.create_release.outputs.id }}
