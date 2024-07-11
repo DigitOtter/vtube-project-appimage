@@ -1,0 +1,5 @@
+services:
+  appimage_build:
+    build: .
+    volumes:
+      - .:/vtube-project
