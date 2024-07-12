@@ -1,8 +1,5 @@
 #!/usr/bin/bash
 
-rustup default nightly
-rustup update nightly
-
 pushd deps/vtube-project
 ./CI/build_dependencies.sh -DTSV_ABSOLUTE_PATH=OFF -DCMAKE_CXX_STANDARD=20
 
