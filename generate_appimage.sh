@@ -32,7 +32,7 @@ ls deps/vtube-project/bin/*.so | xargs -I {} cp "{}" AppDir/usr/lib/
 
 # Install start script, .desktop and icon
 cp vtube_project.sh AppDir/usr/bin/
-linuxdeploy --appimage-extract-and-run --appdir AppDir -e /usr/bin/bash -d vtube_project.desktop -i vtube_project.png
+linuxdeploy --appimage-extract-and-run --appdir AppDir -e /usr/bin/bash -e /usr/bin/zenity -d vtube_project.desktop -i vtube_project.png
 
 # Copy godot base as linuxdeploy uses patchelf to change rpath, which breaks the executable
 # ( might be related to https://github.com/NixOS/patchelf/issues/528 )

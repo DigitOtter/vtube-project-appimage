@@ -32,7 +32,8 @@ RUN apt-get update && \
         libopencv-calib3d-dev \
         libopencv-features2d-dev \
         libopencv-imgproc-dev \
-        libopencv-video-dev
+        libopencv-video-dev \
+        zenity
 
 
 # Setup AppImage
